@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppShell } from "@/layouts/AppShell";
+import { SeoManager } from "@/seo/SeoManager";
+import { AboutPage } from "@/features/about/AboutPage";
 import { OnboardingPage } from "@/features/profile/onboarding/OnboardingPage";
 import { HomePage } from "@/features/home/HomePage";
 import { DiscoverPage } from "@/features/discovery/DiscoverPage";
@@ -16,12 +18,16 @@ import { SettingsPage } from "@/features/settings/SettingsPage";
 import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 
 export const router = createBrowserRouter([
+  {
+    element: <SeoManager />,
+    children: [
   { path: "/onboarding", element: <OnboardingPage /> },
   {
     path: "/",
     element: <AppShell />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: "about", element: <AboutPage /> },
       { path: "discover", element: <DiscoverPage /> },
       { path: "discover/random", element: <RandomMatchPage /> },
       { path: "chats", element: <ChatsPage /> },
@@ -34,6 +40,8 @@ export const router = createBrowserRouter([
       { path: "ideas", element: <IdeasPage /> },
       { path: "settings", element: <SettingsPage /> },
       { path: "*", element: <NotFoundPage /> },
+    ],
+  },
     ],
   },
 ]);

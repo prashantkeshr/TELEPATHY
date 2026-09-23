@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Search, Shuffle } from "lucide-react";
+import { Search, Shuffle, Info } from "lucide-react";
 import { db } from "@/services/storage/db";
 import { LogoMark } from "@/components/ui/Logo";
 import { Avatar } from "@/components/ui/Avatar";
@@ -72,6 +72,20 @@ export function Sidebar({ onOpenCommandPalette }: { onOpenCommandPalette: () => 
         >
           <settingsNavItem.icon className="size-4" />
           Settings
+        </NavLink>
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-3 rounded-[var(--radius-md)] px-3 py-2 text-sm font-medium transition-colors",
+              isActive
+                ? "bg-accent-muted text-accent"
+                : "text-text-secondary hover:bg-surface-2 hover:text-text-primary",
+            )
+          }
+        >
+          <Info className="size-4" />
+          About & FAQ
         </NavLink>
         <NavLink
           to="/onboarding"

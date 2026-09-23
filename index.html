@@ -25,6 +25,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="format-detection" content="telephone=no" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="Telepathy — LLM-readable summary" />
 
     <!-- Icons: SVG for browsers that support it (crisp at any tab/pinned-tab
          size), PNG fallbacks for the browser tab and platforms — iOS home
@@ -42,50 +43,23 @@
     <meta property="og:url" content="https://telepathy.dhurta.com/" />
     <meta property="og:title" content="Telepathy — Meet Strangers, Make Friends, Exchange Ideas" />
     <meta property="og:description" content="Meet someone new. Find something in common. Start a meaningful conversation — by text, voice, or video, direct peer-to-peer, with your privacy protected by default." />
-    <meta property="og:image" content="https://telepathy.dhurta.com/og-image.svg" />
+    <meta property="og:image" content="https://telepathy.dhurta.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Telepathy — a privacy-first platform for meeting new people and having meaningful conversations" />
     <meta property="og:locale" content="en_US" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://telepathy.dhurta.com/" />
     <meta name="twitter:title" content="Telepathy — Meet Strangers, Make Friends, Exchange Ideas" />
     <meta name="twitter:description" content="Meet someone new. Find something in common. Start a meaningful conversation — by text, voice, or video, direct peer-to-peer, with your privacy protected by default." />
-    <meta name="twitter:image" content="https://telepathy.dhurta.com/og-image.svg" />
+    <meta name="twitter:image" content="https://telepathy.dhurta.com/og-image.png" />
     <meta name="twitter:image:alt" content="Telepathy — a privacy-first platform for meeting new people and having meaningful conversations" />
-
-    <!-- Structured data for search engines and AI answer engines -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Telepathy",
-        "url": "https://telepathy.dhurta.com/",
-        "description": "Telepathy is a privacy-first, frontend-first platform for meeting new people through random chat, interest matching, and language exchange, communicating by text, voice, or video over direct peer-to-peer WebRTC connections.",
-        "applicationCategory": "SocialNetworkingApplication",
-        "operatingSystem": "Any (Web, PWA)",
-        "browserRequirements": "Requires a modern browser with WebRTC support",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "featureList": [
-          "Random stranger matching",
-          "Interest-based matching",
-          "Language exchange",
-          "Knowledge and idea exchange",
-          "Text, voice, and video chat",
-          "Peer-to-peer WebRTC connections",
-          "Private invite-only rooms",
-          "Topic-based chat rooms",
-          "Local-first, privacy-preserving storage",
-          "Installable Progressive Web App"
-        ]
-      }
-    </script>
+    <!-- Structured data (JSON-LD) is injected per page by scripts/postbuild-seo.mjs -->
+    <!--SEO_JSONLD-->
   </head>
   <body>
     <div id="root"></div>

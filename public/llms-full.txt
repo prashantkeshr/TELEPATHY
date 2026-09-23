@@ -24,9 +24,31 @@ Telepathy is built around conversations that start from something in common — 
 - [Discover](https://telepathy.dhurta.com/discover): interest, language, and intent filters.
 - [Private rooms](https://telepathy.dhurta.com/rooms): create or join a one-to-one peer-to-peer room.
 
+## Frequently asked questions
+
+### Do I need an account to use Telepathy?
+No. There is no sign-up. Your profile is created on your device and stays there unless you choose otherwise. No email, phone number, or real name is required.
+
+### Are my messages stored on a server?
+No. Conversations flow directly between the two browsers over WebRTC, and your history is stored locally in your browser (IndexedDB). Telepathy has no server that receives your messages.
+
+### How do I connect with someone?
+Create a private room, which generates a one-time code. Share it with the other person through any channel you trust; they paste it in and send a response code back. Once you enter that, a direct peer-to-peer connection opens.
+
+### Can I do video and voice calls?
+Yes. Once you're connected you can start a voice or video call. Your camera and microphone are never requested until you click the call button, and you can stay text-only.
+
+### Does Telepathy match me with random strangers automatically?
+Not yet. Automatic matching between strangers needs a signaling server, which Telepathy deliberately does not run today. Private rooms work now; discovery filters are ready for when a signaling provider is added.
+
+### Is it safe?
+You can block or report anyone from a conversation, and nothing is shared unless you choose. Telepathy is not intended for minors; only connect with people you are comfortable talking to, and never share sensitive personal information.
+
+### What languages does it support?
+The interface is English today, with Hindi and more planned. You can list languages you speak and are learning on your profile to find language-exchange partners.
+
 ## Optional
 
-- [Extended description for LLMs](https://telepathy.dhurta.com/llms-full.txt): the same content with the full FAQ.
 - [Source code](https://github.com/prashantkeshr/TELEPATHY): README with architecture, roadmap, and honest status of each feature.
 - [Sitemap](https://telepathy.dhurta.com/sitemap.xml)
 

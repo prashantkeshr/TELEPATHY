@@ -1,17 +1,26 @@
 {
+  "id": "/",
   "name": "Telepathy",
   "short_name": "Telepathy",
-  "description": "Meet someone new. Find something in common. Start a meaningful conversation.",
+  "description": "Meet someone new. Find something in common. Start a meaningful conversation — peer-to-peer, private, no account.",
+  "lang": "en",
+  "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0b0c10",
   "theme_color": "#0b0c10",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "categories": ["social", "communication", "education"],
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Create a private room", "short_name": "New room", "url": "/rooms/host", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Join a room", "short_name": "Join", "url": "/rooms/join", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Discover people", "short_name": "Discover", "url": "/discover", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
   ]
 }

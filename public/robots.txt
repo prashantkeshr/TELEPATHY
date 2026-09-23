@@ -1,11 +1,17 @@
 # Telepathy — robots.txt
 # https://telepathy.dhurta.com
+#
+# Public pages are open to all crawlers. Private/local-only screens
+# (/chats, /friends, /ideas, /settings, /onboarding, room flows) carry a
+# noindex meta tag rather than a Disallow, because a Disallow would stop
+# crawlers from ever *seeing* that noindex.
 
 User-agent: *
 Allow: /
 
-# Known AI/answer-engine crawlers — explicitly allowed so Telepathy can be
-# cited in AI-generated answers and summaries.
+# AI search / answer-engine / assistant crawlers — explicitly welcome so
+# Telepathy can be found and cited accurately. To opt out of a category
+# (e.g. model training) change "Allow: /" to "Disallow: /" for that agent.
 User-agent: GPTBot
 Allow: /
 
@@ -21,13 +27,34 @@ Allow: /
 User-agent: Claude-User
 Allow: /
 
+User-agent: Claude-SearchBot
+Allow: /
+
 User-agent: anthropic-ai
 Allow: /
 
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Perplexity-User
+Allow: /
+
 User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: MistralAI-User
 Allow: /
 
 User-agent: Bingbot

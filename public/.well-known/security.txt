@@ -1,0 +1,5 @@
+Contact: https://github.com/prashantkeshr/TELEPATHY/security/advisories/new
+Expires: 2027-09-24T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://telepathy.dhurta.com/.well-known/security.txt
+Policy: https://github.com/prashantkeshr/TELEPATHY

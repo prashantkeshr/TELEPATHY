@@ -100,7 +100,7 @@ Every unfinished feature says so honestly in the UI — Telepathy never simulate
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) 20+
+- [Node.js](https://nodejs.org/) 22.18+ (the SEO post-build step imports TypeScript directly)
 - npm (bundled with Node)
 
 ### Install & run
@@ -170,15 +170,20 @@ Every provider (signaling, WebRTC, storage, moderation, AI, identity) is designe
 
 ## SEO & AI discoverability
 
-This repo ships with the groundwork to be findable by both traditional search engines and AI answer engines:
+A React SPA ships an empty page to anything that doesn't run JavaScript, and every URL shares one `<title>` — the two biggest SEO problems for this kind of site. Telepathy addresses both at the source:
 
-- **`index.html`** — descriptive `<title>`, meta description, keyword-rich content, canonical URL, Open Graph and Twitter Card tags, and `WebApplication` JSON-LD structured data
-- **`public/robots.txt`** — allows general crawlers plus known AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, and others) so Telepathy can be cited in AI-generated answers
-- **`public/sitemap.xml`** — lists all current routes for search-engine indexing
-- **`public/llms.txt`** — a concise, structured summary of the product following the [llms.txt convention](https://llmstxt.org/), so AI assistants summarize and cite Telepathy accurately
-- **`public/og-image.svg`** — a branded social-share preview image
+- **One route table, `src/seo/routes.ts`**, holds every route's title, description, and indexability. It's the single source of truth for everything below, so they can't drift apart.
+- **Runtime (`SeoManager`)** updates the title, description, canonical, robots, Open Graph and Twitter tags on every client-side navigation.
+- **Build-time prerender (`scripts/postbuild-seo.mjs`, runs as part of `npm run build`)** writes real static HTML for each public URL (`about.html` etc., served at `/about` by GitHub Pages with no redirect), with route-specific tags, JSON-LD, and crawler-readable `<noscript>` content — so non-JS crawlers, including most AI fetchers, see real content. It fails the build loudly if the template stops containing a tag it expects to rewrite.
+- **Structured data (JSON-LD):** `WebSite` + `Organization` + `WebApplication` on the homepage, `BreadcrumbList` on inner pages, and `FAQPage` on `/about` (matching the visible FAQ).
+- **`sitemap.xml`** is generated from the route table (indexable routes only; `lastmod` is the last commit date, not "today").
+- **Private screens** (`/chats`, `/friends`, `/ideas`, `/settings`, `/onboarding`, room flows) are `noindex`. They use a meta tag rather than a `Disallow`, since a Disallow would stop crawlers from ever seeing the noindex. Informational pages stay reachable without a profile (`/`, `/about`, `/discover`, `/rooms`), because crawlers never have one.
+- **`404.html`** is generated `noindex` with no canonical; GitHub Pages serves it with a real 404 status, and it boots the SPA so deep links still work on refresh.
+- **`robots.txt`** welcomes search and AI assistant crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot-Extended, and others) — edit it if you'd rather opt out of any of them.
+- **`llms.txt` / `llms-full.txt`** give AI systems an accurate summary, including an explicit list of what does *not* work yet, so assistants don't overstate the product.
+- `og-image.png` (1200×630 — most social platforms don't render SVG previews), `manifest.webmanifest` (with shortcuts), `/.well-known/security.txt`, and `humans.txt`.
 
-To get full value from these once `telepathy.dhurta.com` is live: submit `sitemap.xml` to [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters), and set your GitHub repo's **About → Description and Topics** (e.g. `webrtc`, `p2p`, `react`, `chat-app`, `video-chat`, `pwa`) — those fields drive GitHub's own search and topic pages independently of this README.
+**After it's live**, these are the steps only you can do: submit `https://telepathy.dhurta.com/sitemap.xml` in [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters) (verify the domain via a DNS TXT record at your registrar), use *URL Inspection → Request indexing* on the homepage and `/about`, and set the GitHub repo's About description and Topics (`webrtc`, `p2p`, `react`, `chat-app`, `video-chat`, `pwa`).
 
 ## Roadmap
 

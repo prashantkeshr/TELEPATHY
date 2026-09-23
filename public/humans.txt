@@ -1,0 +1,8 @@
+/* TEAM */
+Creator: Prashant Kumar Keshri
+Site: https://telepathy.dhurta.com
+Source: https://github.com/prashantkeshr/TELEPATHY
+
+/* SITE */
+Standards: HTML5, CSS3, WebRTC, PWA
+Components: React, TypeScript, Vite, Tailwind CSS, Dexie (IndexedDB)

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Users, Lightbulb, Settings, Moon, Sun, Monitor } from "lucide-react";
+import { Users, Lightbulb, Settings, Info, Moon, Sun, Monitor } from "lucide-react";
 import { useTheme } from "@/services/theme/ThemeProvider";
 import { cn } from "@/utils/cn";
 
@@ -12,6 +12,7 @@ export function MoreSheet({ open, onClose }: { open: boolean; onClose: () => voi
     { to: "/friends", label: "Friends", icon: Users },
     { to: "/ideas", label: "Ideas", icon: Lightbulb },
     { to: "/settings", label: "Settings", icon: Settings },
+    { to: "/about", label: "About & FAQ", icon: Info },
   ];
 
   return (

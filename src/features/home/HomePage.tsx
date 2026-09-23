@@ -51,7 +51,8 @@ const primaryActions: PrimaryAction[] = [
 
 export function HomePage() {
   const navigate = useNavigate();
-  const profile = useLiveQuery(() => db.profile.get("local"), []);
+  // undefined = still loading, null = confirmed no profile yet
+  const profile = useLiveQuery(async () => (await db.profile.get("local")) ?? null, []);
   const savedPeopleCount = useLiveQuery(() => db.savedPeople.count(), [], 0);
   const conversationCount = useLiveQuery(() => db.conversations.count(), [], 0);
   const ideaCount = useLiveQuery(() => db.ideas.count(), [], 0);
@@ -75,6 +76,18 @@ export function HomePage() {
       </div>
 
       <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">
+        {profile === null && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-lg)] border border-accent/30 bg-accent-muted p-4">
+            <div>
+              <p className="text-sm font-semibold text-text-primary">Create your Telepathy profile</p>
+              <p className="text-[13px] text-text-secondary">
+                Your profile helps Telepathy find better conversations. It stays on your device, and
+                you control what others can see — no account or real name needed.
+              </p>
+            </div>
+            <Button onClick={() => navigate("/onboarding")}>Get started</Button>
+          </div>
+        )}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {primaryActions.map((action, i) => (
             <CardInteractive
