@@ -65,7 +65,7 @@ It's designed as a serious alternative to old-style anonymous video-chat sites: 
 
 ## Features
 
-**Live today (Phases 1–4 complete, Phase 5 text/data channel):**
+**Live today (Phases 1–4 complete, Phase 5 mostly complete):**
 - Responsive application shell — desktop sidebar, mobile bottom navigation, adaptive from 320px to 4K
 - Full dark / light / system theming, respecting `prefers-reduced-motion` and `prefers-color-scheme`
 - Aurora gradient backdrops, an animated connection-themed hero graphic, and staggered entrance/hover motion — all disabled automatically under `prefers-reduced-motion`
@@ -75,6 +75,7 @@ It's designed as a serious alternative to old-style anonymous video-chat sites: 
 - Locally-generated conversation-topic suggestions and starter questions — no AI, no network call, computed from your own profile
 - A complete chat interface — message bubbles, reply, emoji reactions, code blocks, safe link rendering, in-conversation search, save/export/delete, block, and report — backed by a real local message store and a formal connection-state machine
 - **Real, working peer-to-peer connections** — no signaling server exists (this is a static site), so Telepathy implements serverless "Mode A" WebRTC: create a private room, exchange a one-time code with someone through any channel you already trust, and talk over a genuine `RTCPeerConnection` data channel — verified with real two-way message delivery, not simulated
+- **Audio/video calling** on top of that same connection — starting a call renegotiates through the already-open data channel (no second code exchange), with mic/camera mute, graceful fallback (camera denied → retry audio-only → clear error), and an explicit accept/decline prompt for incoming calls rather than auto-playing anyone's stream. Camera/mic are never requested until you click Call. *Caveat: verified end-to-end for the permission-denied/fallback path on real hardware; full two-device video/audio streaming hasn't been tested on real devices yet — try it yourself before relying on it for something important.*
 - Local-first storage on IndexedDB (Dexie) — profile, saved people, conversations, messages, and ideas persist on-device
 - Real, working Settings: theme control, live storage-usage inspector, one-click local data reset, profile editing
 - A professional design-system component library (buttons, dialogs, toasts, chips, avatars, empty states, and more) built on outline icons, not emoji
@@ -187,7 +188,7 @@ Telepathy is built in 12 phases. Status:
 - [x] **Phase 2 — Profile:** onboarding flow, Conversation Passport, IndexedDB profile persistence, privacy controls
 - [x] **Phase 3 — Discovery:** matching UI, interests, topics, language exchange, random-mode architecture
 - [x] **Phase 4 — Chat:** chat UI, local messages, connection state, conversation tools
-- [~] **Phase 5 — WebRTC:** peer connection abstraction ✅, data channels ✅ (real P2P text chat, manual signaling), audio ⏳, video ⏳, reconnection (partial — loss is detected accurately; Mode A has no persistent signaling channel to auto-renegotiate over)
+- [~] **Phase 5 — WebRTC:** peer connection abstraction ✅, data channels ✅ (real P2P text chat, manual signaling), audio/video ✅ code complete — call renegotiation, mic/camera mute, fallback on permission denial all verified working, but full device-to-device media *streaming* hasn't been tested on real hardware yet (only the failure/fallback path was verifiable in the dev sandbox — verify this before relying on it), reconnection (partial — loss is detected accurately; Mode A has no persistent signaling channel to auto-renegotiate over)
 - [~] **Phase 6 — Rooms:** private rooms ✅, room codes ✅ (pulled forward as Phase 5's signaling mechanism), invitation links ⏳, QR ⏳, topic/group rooms ⏳ (need a server-assisted SFU)
 - [ ] **Phase 7 — Knowledge Exchange:** ideas, notes, whiteboard, lightweight code sharing
 - [ ] **Phase 8 — File Transfer:** chunking, progress, retry, integrity verification
