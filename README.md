@@ -65,19 +65,21 @@ It's designed as a serious alternative to old-style anonymous video-chat sites: 
 
 ## Features
 
-**Live today (Phase 1 — Foundation, Phase 2 — Profile):**
+**Live today (Phases 1–3 — Foundation, Profile, Discovery):**
 - Responsive application shell — desktop sidebar, mobile bottom navigation, adaptive from 320px to 4K
 - Full dark / light / system theming, respecting `prefers-reduced-motion` and `prefers-color-scheme`
 - Aurora gradient backdrops, an animated connection-themed hero graphic, and staggered entrance/hover motion — all disabled automatically under `prefers-reduced-motion`
 - Command palette (<kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>K</kbd>) for fast navigation
 - An 8-step profile onboarding wizard (name, avatar, languages, interests, intent, conversation style, privacy, preview) with a **Conversation Passport** identity card that respects per-field visibility toggles
+- Real discovery filters (interests, language, conversation intent) that carry through to the connection screen, backed by a provider-independent `MatchingEngine` compatibility scorer
+- Locally-generated conversation-topic suggestions and starter questions — no AI, no network call, computed from your own profile
 - Local-first storage on IndexedDB (Dexie) — profile, saved people, conversations, and ideas persist on-device
 - Real, working Settings: theme control, live storage-usage inspector, one-click local data reset, profile editing
 - A professional design-system component library (buttons, dialogs, toasts, chips, avatars, empty states, and more) built on outline icons, not emoji
 - Installable PWA groundwork — manifest, icons, and offline-safe shell
 
 **Designed and scaffolded, shipping in upcoming phases** (see [Roadmap](#roadmap)):
-- Discovery filters · Real-time chat · WebRTC calling with audio/video fallback · Private & topic rooms with QR/invite links · Idea whiteboard & code sharing · Chunked P2P file transfer · Block/report/privacy center · Connection diagnostics · Full offline PWA · i18n (English, Hindi, and more)
+- Real-time chat · WebRTC calling with audio/video fallback · Private & topic rooms with QR/invite links · Idea whiteboard & code sharing · Chunked P2P file transfer · Block/report/privacy center · Connection diagnostics · Full offline PWA · i18n (English, Hindi, and more)
 
 Every unfinished feature says so honestly in the UI — Telepathy never simulates a fake "connecting…" animation or a matching flow that isn't actually wired up.
 
@@ -179,7 +181,7 @@ Telepathy is built in 12 phases. Status:
 
 - [x] **Phase 1 — Foundation:** project setup, routing, design system, responsive shell, theming, icons, typography
 - [x] **Phase 2 — Profile:** onboarding flow, Conversation Passport, IndexedDB profile persistence, privacy controls
-- [ ] **Phase 3 — Discovery:** matching UI, interests, topics, language exchange, random-mode architecture
+- [x] **Phase 3 — Discovery:** matching UI, interests, topics, language exchange, random-mode architecture
 - [ ] **Phase 4 — Chat:** chat UI, local messages, connection state, conversation tools
 - [ ] **Phase 5 — WebRTC:** peer connection abstraction, data channels, audio, video, reconnection
 - [ ] **Phase 6 — Rooms:** private rooms, room codes, invitation links, QR
