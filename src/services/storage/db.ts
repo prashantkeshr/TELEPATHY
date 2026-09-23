@@ -42,9 +42,31 @@ export interface SavedPersonRecord {
 export interface ConversationRecord {
   id: string;
   peerNickname: string;
+  peerAvatarDataUrl?: string;
+  sharedInterests: string[];
   startedAt: number;
   endedAt?: number;
   savedAt?: number;
+}
+
+export interface MessageRecord {
+  id: string;
+  conversationId: string;
+  sender: "me" | "peer";
+  text: string;
+  isCode?: boolean;
+  replyToId?: string;
+  reactions: string[];
+  createdAt: number;
+}
+
+export interface ReportRecord {
+  id: string;
+  conversationId?: string;
+  peerNickname: string;
+  category: string;
+  details?: string;
+  createdAt: number;
 }
 
 export interface IdeaRecord {
@@ -73,6 +95,8 @@ class TelepathyDatabase extends Dexie {
   profile!: EntityTable<ProfileRecord, "id">;
   savedPeople!: EntityTable<SavedPersonRecord, "id">;
   conversations!: EntityTable<ConversationRecord, "id">;
+  messages!: EntityTable<MessageRecord, "id">;
+  reports!: EntityTable<ReportRecord, "id">;
   ideas!: EntityTable<IdeaRecord, "id">;
   blockedUsers!: EntityTable<BlockedUserRecord, "id">;
   settings!: EntityTable<SettingRecord, "key">;
@@ -86,6 +110,10 @@ class TelepathyDatabase extends Dexie {
       ideas: "id, type, updatedAt",
       blockedUsers: "id, blockedAt",
       settings: "key",
+    });
+    this.version(2).stores({
+      messages: "id, conversationId, createdAt",
+      reports: "id, conversationId, createdAt",
     });
   }
 }

@@ -5,6 +5,8 @@ import { HomePage } from "@/features/home/HomePage";
 import { DiscoverPage } from "@/features/discovery/DiscoverPage";
 import { RandomMatchPage } from "@/features/discovery/RandomMatchPage";
 import { ChatsPage } from "@/features/chat/ChatsPage";
+import { ConversationView } from "@/features/chat/ConversationView";
+import { ChatPreviewPage } from "@/features/chat/ChatPreviewPage";
 import { RoomsPage } from "@/features/rooms/RoomsPage";
 import { FriendsPage } from "@/features/friends/FriendsPage";
 import { IdeasPage } from "@/features/ideas/IdeasPage";
@@ -21,6 +23,8 @@ export const router = createBrowserRouter([
       { path: "discover", element: <DiscoverPage /> },
       { path: "discover/random", element: <RandomMatchPage /> },
       { path: "chats", element: <ChatsPage /> },
+      { path: "chats/preview", element: <ChatPreviewPage /> },
+      { path: "chats/:id", element: <ConversationView /> },
       { path: "rooms", element: <RoomsPage /> },
       { path: "friends", element: <FriendsPage /> },
       { path: "ideas", element: <IdeasPage /> },
