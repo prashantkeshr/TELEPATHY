@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Bookmark, BookmarkCheck, Download, Trash2, ShieldAlert, ShieldX, Search } from "lucide-react";
+import { ArrowLeft, Bookmark, BookmarkCheck, Download, Trash2, ShieldAlert, ShieldX, Search, Video, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "@/components/ui/Avatar";
 import { IconButton } from "@/components/ui/IconButton";
@@ -33,6 +33,9 @@ export function ChatHeader({
   onBlock,
   onReport,
   onSearchToggle,
+  onStartVideoCall,
+  onStartAudioCall,
+  inCall,
   backTo,
 }: {
   nickname: string;
@@ -46,6 +49,9 @@ export function ChatHeader({
   onBlock?: () => void;
   onReport?: () => void;
   onSearchToggle?: () => void;
+  onStartVideoCall?: () => void;
+  onStartAudioCall?: () => void;
+  inCall?: boolean;
   backTo: string;
 }) {
   const navigate = useNavigate();
@@ -67,6 +73,16 @@ export function ChatHeader({
         </div>
       </div>
       <div className="flex items-center gap-0.5">
+        {onStartAudioCall && !inCall && (
+          <IconButton label="Start voice call" variant="ghost" onClick={onStartAudioCall}>
+            <Phone />
+          </IconButton>
+        )}
+        {onStartVideoCall && !inCall && (
+          <IconButton label="Start video call" variant="ghost" onClick={onStartVideoCall}>
+            <Video />
+          </IconButton>
+        )}
         {onSearchToggle && (
           <IconButton label="Search in conversation" variant="ghost" onClick={onSearchToggle}>
             <Search />

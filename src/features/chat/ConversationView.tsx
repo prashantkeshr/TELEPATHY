@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Search, X } from "lucide-react";
@@ -8,10 +8,12 @@ import { ChatHeader } from "@/features/chat/components/ChatHeader";
 import { MessageBubble } from "@/features/chat/components/MessageBubble";
 import { Composer } from "@/features/chat/components/Composer";
 import { ReportDialog } from "@/features/chat/components/ReportDialog";
+import { CallPanel, IncomingCallBanner } from "@/features/chat/components/CallPanel";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { IconButton } from "@/components/ui/IconButton";
 import { getConnection, removeConnection } from "@/services/webrtc/activeConnections";
 import { parseIntroMessage } from "@/services/webrtc/introMessage";
+import { requestMedia, mediaFailureMessages } from "@/services/webrtc/media";
 import type { ConnectionState } from "@/services/connection/connectionState";
 
 function draftKey(conversationId: string) {
@@ -34,6 +36,26 @@ export function ConversationView() {
   const [query, setQuery] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
   const [liveState, setLiveState] = useState<ConnectionState | null>(null);
+
+  const [callActive, setCallActive] = useState(false);
+  const [callKind, setCallKind] = useState<"video" | "audio" | null>(null);
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+  const [micEnabled, setMicEnabled] = useState(true);
+  const [cameraEnabled, setCameraEnabled] = useState(true);
+  const [incomingCallKind, setIncomingCallKind] = useState<"video" | "audio" | null>(null);
+
+  // Refs mirroring the above call state: the connection effect below only
+  // runs once per `id`, so a handler closure reading plain state would see
+  // whatever was true at mount forever, not the latest value.
+  const callActiveRef = useRef(callActive);
+  const localStreamRef = useRef(localStream);
+  useEffect(() => {
+    callActiveRef.current = callActive;
+  }, [callActive]);
+  useEffect(() => {
+    localStreamRef.current = localStream;
+  }, [localStream]);
 
   useEffect(() => {
     localStorage.setItem(draftKey(id), value);
@@ -67,9 +89,28 @@ export function ConversationView() {
         createdAt: Date.now(),
       });
     });
+    const unsubStream = service.onRemoteStream((stream) => {
+      setRemoteStream(stream);
+      if (!callActiveRef.current) {
+        setIncomingCallKind(stream.getVideoTracks().length > 0 ? "video" : "audio");
+      }
+    });
+    const unsubCallEnd = service.onCallEnd(() => {
+      setCallActive(false);
+      setCallKind(null);
+      setLocalStream(null);
+      setRemoteStream(null);
+      setIncomingCallKind(null);
+    });
     return () => {
       unsubState();
       unsubMessage();
+      unsubStream();
+      unsubCallEnd();
+      // Leaving the conversation mid-call: stop our own camera/mic rather
+      // than leaving them hot with no visible call UI, and let the peer
+      // know the call ended.
+      if (localStreamRef.current) service.endCall();
     };
     // profile is only needed at the moment an intro message actually arrives, not as a re-subscribe trigger
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,6 +130,71 @@ export function ConversationView() {
       </div>
     );
   }
+
+  const applyLocalStream = (kind: "video" | "audio", stream: MediaStream) => {
+    getConnection(id)?.addMedia(stream);
+    setLocalStream(stream);
+    setCallKind(kind);
+    setCallActive(true);
+    setMicEnabled(true);
+    setCameraEnabled(kind === "video");
+    setIncomingCallKind(null);
+  };
+
+  const startCall = async (kind: "video" | "audio") => {
+    if (!getConnection(id)) return;
+    const result = await requestMedia(kind);
+    if (result.stream) {
+      applyLocalStream(kind, result.stream);
+      return;
+    }
+    if (kind === "video") {
+      const audioResult = await requestMedia("audio");
+      if (audioResult.stream) {
+        show("Camera unavailable — continuing with audio only", "warning");
+        applyLocalStream("audio", audioResult.stream);
+        return;
+      }
+      show(mediaFailureMessages[audioResult.error ?? "unknown"], "danger");
+      return;
+    }
+    show(mediaFailureMessages[result.error ?? "unknown"], "danger");
+  };
+
+  const acceptIncoming = async (kind: "video" | "audio") => {
+    const result = await requestMedia(kind);
+    if (result.stream) {
+      applyLocalStream(kind, result.stream);
+    } else {
+      show(mediaFailureMessages[result.error ?? "unknown"], "danger");
+      declineIncoming();
+    }
+  };
+
+  const declineIncoming = () => {
+    getConnection(id)?.endCall();
+    setIncomingCallKind(null);
+    setRemoteStream(null);
+  };
+
+  const hangUp = () => {
+    getConnection(id)?.endCall();
+    setCallActive(false);
+    setCallKind(null);
+    setLocalStream(null);
+    setRemoteStream(null);
+    setIncomingCallKind(null);
+  };
+
+  const toggleMic = () => {
+    getConnection(id)?.setTrackEnabled("audio", !micEnabled);
+    setMicEnabled((v) => !v);
+  };
+
+  const toggleCamera = () => {
+    getConnection(id)?.setTrackEnabled("video", !cameraEnabled);
+    setCameraEnabled((v) => !v);
+  };
 
   const send = async () => {
     const text = value.trim();
@@ -190,8 +296,21 @@ export function ConversationView() {
         onBlock={block}
         onReport={() => setReportOpen(true)}
         onSearchToggle={() => setSearchOpen((v) => !v)}
+        onStartVideoCall={liveState === "connected" ? () => startCall("video") : undefined}
+        onStartAudioCall={liveState === "connected" ? () => startCall("audio") : undefined}
+        inCall={callActive}
         backTo="/chats"
       />
+
+      {incomingCallKind && !callActive && (
+        <IncomingCallBanner
+          peerNickname={conversation.peerNickname}
+          kind={incomingCallKind}
+          onAcceptVideo={() => acceptIncoming("video")}
+          onAcceptAudioOnly={() => acceptIncoming("audio")}
+          onDecline={declineIncoming}
+        />
+      )}
 
       {searchOpen && (
         <div className="flex items-center gap-2 border-b border-border bg-surface-2 px-4 py-2">
@@ -217,22 +336,36 @@ export function ConversationView() {
         </div>
       )}
 
-      <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-        {visibleMessages.length === 0 ? (
-          <EmptyState title={query ? "No matches" : "No messages yet"} />
-        ) : (
-          visibleMessages.map((m) => (
-            <MessageBubble
-              key={m.id}
-              message={m}
-              replyToMessage={m.replyToId ? messageById.get(m.replyToId) : undefined}
-              onReply={setReplyToId}
-              onDelete={deleteMessage}
-              onReact={react}
-            />
-          ))
-        )}
-      </div>
+      {callActive && callKind ? (
+        <CallPanel
+          kind={callKind}
+          peerNickname={conversation.peerNickname}
+          localStream={localStream}
+          remoteStream={remoteStream}
+          micEnabled={micEnabled}
+          cameraEnabled={cameraEnabled}
+          onToggleMic={toggleMic}
+          onToggleCamera={toggleCamera}
+          onEndCall={hangUp}
+        />
+      ) : (
+        <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+          {visibleMessages.length === 0 ? (
+            <EmptyState title={query ? "No matches" : "No messages yet"} />
+          ) : (
+            visibleMessages.map((m) => (
+              <MessageBubble
+                key={m.id}
+                message={m}
+                replyToMessage={m.replyToId ? messageById.get(m.replyToId) : undefined}
+                onReply={setReplyToId}
+                onDelete={deleteMessage}
+                onReact={react}
+              />
+            ))
+          )}
+        </div>
+      )}
 
       <Composer
         value={value}
