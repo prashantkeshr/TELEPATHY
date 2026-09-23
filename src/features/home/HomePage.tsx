@@ -15,8 +15,10 @@ import {
 import { db } from "@/services/storage/db";
 import { Card, CardInteractive } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { HeroVisual } from "@/components/ui/HeroVisual";
+import { suggestTopics } from "@/services/matching/topicSuggestions";
 
 type Vivid = "violet" | "cyan" | "blue" | "amber" | "rose" | "emerald";
 
@@ -49,9 +51,11 @@ const primaryActions: PrimaryAction[] = [
 
 export function HomePage() {
   const navigate = useNavigate();
+  const profile = useLiveQuery(() => db.profile.get("local"), []);
   const savedPeopleCount = useLiveQuery(() => db.savedPeople.count(), [], 0);
   const conversationCount = useLiveQuery(() => db.conversations.count(), [], 0);
   const ideaCount = useLiveQuery(() => db.ideas.count(), [], 0);
+  const topics = profile ? suggestTopics(profile) : [];
 
   return (
     <div>
@@ -107,6 +111,35 @@ export function HomePage() {
             />
           ) : null}
         </section>
+
+        {profile && profile.interests.length > 0 && (
+          <section className="mt-10">
+            <h2 className="mb-3 text-sm font-semibold text-text-primary">Your Interests</h2>
+            <div className="flex flex-wrap gap-2">
+              {profile.interests.map((interest) => (
+                <Chip
+                  key={interest}
+                  onClick={() => navigate(`/discover/random?mode=interests&interests=${encodeURIComponent(interest)}`)}
+                >
+                  {interest}
+                </Chip>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {topics.length > 0 && (
+          <section className="mt-10">
+            <h2 className="mb-3 text-sm font-semibold text-text-primary">Suggested Conversation Topics</h2>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {topics.map((topic) => (
+                <Card key={topic} className="hover-lift px-4 py-3 text-sm text-text-primary">
+                  {topic}
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Card className="hover-lift p-4">

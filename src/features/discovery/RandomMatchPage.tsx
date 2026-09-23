@@ -1,15 +1,26 @@
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Radio } from "lucide-react";
+import { useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowLeft, Radio, Sparkles } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { PhaseNotice } from "@/components/ui/PhaseNotice";
 import { Badge } from "@/components/ui/Badge";
+import { pickConversationStarters } from "@/constants/conversationStarters";
 
 const stages = ["Idle", "Searching", "Matched", "Negotiating", "Connecting", "Connected"];
 
 export function RandomMatchPage() {
   const navigate = useNavigate();
+  const [params] = useSearchParams();
+
+  const interests = useMemo(() => params.get("interests")?.split(",").filter(Boolean) ?? [], [params]);
+  const language = params.get("language");
+  const intents = useMemo(() => params.get("intents")?.split(",").filter(Boolean) ?? [], [params]);
+  const hasFilters = interests.length > 0 || !!language || intents.length > 0;
+
+  const starters = useMemo(() => pickConversationStarters(interests, 3), [interests]);
+
   return (
     <div>
       <PageHeader
@@ -35,9 +46,26 @@ export function RandomMatchPage() {
             connection state machine ship in Phase 5.
           </p>
 
+          {hasFilters && (
+            <div className="mt-5 border-t border-border pt-5 text-left">
+              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-text-tertiary">
+                Ready to search for
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {interests.map((i) => (
+                  <Badge key={i} tone="accent">{i}</Badge>
+                ))}
+                {language && <Badge tone="info">{language}</Badge>}
+                {intents.map((i) => (
+                  <Badge key={i}>{i}</Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-5 flex flex-wrap items-center justify-center gap-1.5">
             {stages.map((stage) => (
-              <Badge key={stage} tone={stage === "Idle" ? "neutral" : "neutral"}>
+              <Badge key={stage} tone="neutral">
                 {stage}
               </Badge>
             ))}
@@ -51,6 +79,23 @@ export function RandomMatchPage() {
               Choose another mode
             </Button>
           </div>
+        </Card>
+
+        <Card className="mt-4 p-5">
+          <div className="mb-3 flex items-center gap-2">
+            <Sparkles className="size-4 text-vivid-amber" />
+            <p className="text-sm font-semibold text-text-primary">Conversation starters</p>
+          </div>
+          <p className="mb-3 text-[13px] text-text-secondary">
+            Generated locally from your interests — ready to use the moment you connect.
+          </p>
+          <ul className="space-y-2">
+            {starters.map((s) => (
+              <li key={s} className="rounded-[var(--radius-md)] bg-surface-2 px-3.5 py-2.5 text-sm text-text-primary">
+                {s}
+              </li>
+            ))}
+          </ul>
         </Card>
 
         <div className="mt-4">
