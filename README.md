@@ -65,7 +65,7 @@ It's designed as a serious alternative to old-style anonymous video-chat sites: 
 
 ## Features
 
-**Live today (Phases 1–4 — Foundation, Profile, Discovery, Chat):**
+**Live today (Phases 1–4 complete, Phase 5 text/data channel):**
 - Responsive application shell — desktop sidebar, mobile bottom navigation, adaptive from 320px to 4K
 - Full dark / light / system theming, respecting `prefers-reduced-motion` and `prefers-color-scheme`
 - Aurora gradient backdrops, an animated connection-themed hero graphic, and staggered entrance/hover motion — all disabled automatically under `prefers-reduced-motion`
@@ -73,14 +73,15 @@ It's designed as a serious alternative to old-style anonymous video-chat sites: 
 - An 8-step profile onboarding wizard (name, avatar, languages, interests, intent, conversation style, privacy, preview) with a **Conversation Passport** identity card that respects per-field visibility toggles
 - Real discovery filters (interests, language, conversation intent) that carry through to the connection screen, backed by a provider-independent `MatchingEngine` compatibility scorer
 - Locally-generated conversation-topic suggestions and starter questions — no AI, no network call, computed from your own profile
-- A complete chat interface — message bubbles, reply, emoji reactions, code blocks, safe link rendering, in-conversation search, save/export/delete, block, and report — backed by a real local message store and a formal connection-state machine, ready for Phase 5 to plug a live peer into
+- A complete chat interface — message bubbles, reply, emoji reactions, code blocks, safe link rendering, in-conversation search, save/export/delete, block, and report — backed by a real local message store and a formal connection-state machine
+- **Real, working peer-to-peer connections** — no signaling server exists (this is a static site), so Telepathy implements serverless "Mode A" WebRTC: create a private room, exchange a one-time code with someone through any channel you already trust, and talk over a genuine `RTCPeerConnection` data channel — verified with real two-way message delivery, not simulated
 - Local-first storage on IndexedDB (Dexie) — profile, saved people, conversations, messages, and ideas persist on-device
 - Real, working Settings: theme control, live storage-usage inspector, one-click local data reset, profile editing
 - A professional design-system component library (buttons, dialogs, toasts, chips, avatars, empty states, and more) built on outline icons, not emoji
 - Installable PWA groundwork — manifest, icons, and offline-safe shell
 
 **Designed and scaffolded, shipping in upcoming phases** (see [Roadmap](#roadmap)):
-- Live WebRTC calling with audio/video fallback · Private & topic rooms with QR/invite links · Idea whiteboard & code sharing · Chunked P2P file transfer · Full privacy center · Connection diagnostics · Full offline PWA · i18n (English, Hindi, and more)
+- Audio/video calling, TURN fallback for restrictive networks, and automatic reconnection (finishing Phase 5) · Automatic random matching (needs a signaling *server*, which Mode A intentionally doesn't require) · QR-code and shareable-link invites for rooms · Topic/group rooms (need a server-assisted SFU) · Idea whiteboard & code sharing · Chunked P2P file transfer · Full privacy center · Connection diagnostics · Full offline PWA · i18n (English, Hindi, and more)
 
 Every unfinished feature says so honestly in the UI — Telepathy never simulates a fake "connecting…" animation or a matching flow that isn't actually wired up.
 
@@ -155,6 +156,8 @@ Meeting a stranger, however, honestly requires a small amount of infrastructure:
 
 Every provider (signaling, WebRTC, storage, moderation, AI, identity) is designed behind a swappable interface so a future backend — authentication, cloud sync, global matching, an SFU for group calls — can be added without rewriting the frontend.
 
+**How peer-to-peer connections work today:** this repo has no signaling server, so Telepathy implements the fully-serverless "Mode A" from the spec above: one person creates a private room, which generates a one-time connection code (a complete WebRTC offer, base64-encoded); they send it to the other person through any channel they already trust; the other person pastes it in, which generates a response code; once that's pasted back, a real `RTCPeerConnection` data channel opens directly between the two browsers — no message ever passes through a Telepathy server. This is genuinely how WebRTC's manual/copy-paste signaling pattern works, not a simulation. Automatic random matching (Discover → Random) still needs a signaling *server* for rendezvous, since strangers have no other channel to exchange codes through — that's `src/services/webrtc/` waiting for a `SignalingProvider` implementation.
+
 ## Privacy & safety
 
 - No real name, phone number, or exact location required to use Telepathy
@@ -184,8 +187,8 @@ Telepathy is built in 12 phases. Status:
 - [x] **Phase 2 — Profile:** onboarding flow, Conversation Passport, IndexedDB profile persistence, privacy controls
 - [x] **Phase 3 — Discovery:** matching UI, interests, topics, language exchange, random-mode architecture
 - [x] **Phase 4 — Chat:** chat UI, local messages, connection state, conversation tools
-- [ ] **Phase 5 — WebRTC:** peer connection abstraction, data channels, audio, video, reconnection
-- [ ] **Phase 6 — Rooms:** private rooms, room codes, invitation links, QR
+- [~] **Phase 5 — WebRTC:** peer connection abstraction ✅, data channels ✅ (real P2P text chat, manual signaling), audio ⏳, video ⏳, reconnection (partial — loss is detected accurately; Mode A has no persistent signaling channel to auto-renegotiate over)
+- [~] **Phase 6 — Rooms:** private rooms ✅, room codes ✅ (pulled forward as Phase 5's signaling mechanism), invitation links ⏳, QR ⏳, topic/group rooms ⏳ (need a server-assisted SFU)
 - [ ] **Phase 7 — Knowledge Exchange:** ideas, notes, whiteboard, lightweight code sharing
 - [ ] **Phase 8 — File Transfer:** chunking, progress, retry, integrity verification
 - [ ] **Phase 9 — Safety:** block, report, mute, privacy center
