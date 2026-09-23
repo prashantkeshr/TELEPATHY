@@ -17,10 +17,10 @@
   <rect width="1200" height="630" fill="url(#glow)"/>
 
   <g transform="translate(100,120)">
-    <rect width="88" height="88" rx="22" fill="#191b23" stroke="#262835" stroke-width="1.5"/>
-    <path d="M19 33C19 25.268 25.268 19 33 19C40.732 19 47 25.268 47 33C47 40.732 40.732 47 33 47" stroke="url(#grad_a)" stroke-width="5.5" stroke-linecap="round"/>
-    <path d="M69 55C69 62.732 62.732 69 55 69C47.268 69 41 62.732 41 55C41 47.268 47.268 41 55 41" stroke="url(#grad_b)" stroke-width="5.5" stroke-linecap="round"/>
-    <circle cx="44" cy="44" r="4.8" fill="#E7E9EE"/>
+    <rect width="88" height="88" rx="19" fill="#191b23" stroke="#262835" stroke-width="1.5"/>
+    <path d="M13.75 31.625 C13.75 21.755 21.755 13.75 31.625 13.75 C41.495 13.75 49.5 21.755 49.5 31.625 C49.5 41.495 41.495 49.5 31.625 49.5" stroke="url(#grad_a)" stroke-width="9.625" stroke-linecap="round"/>
+    <path d="M74.25 56.375 C74.25 66.245 66.245 74.25 56.375 74.25 C46.505 74.25 38.5 66.245 38.5 56.375 C38.5 46.505 46.505 38.5 56.375 38.5" stroke="url(#grad_b)" stroke-width="9.625" stroke-linecap="round"/>
+    <circle cx="44" cy="44" r="8.25" fill="#E7E9EE"/>
   </g>
 
   <text x="100" y="288" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="700" fill="#E7E9EE">Telepathy</text>

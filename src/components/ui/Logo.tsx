@@ -19,42 +19,42 @@ export function Logo({
       className={cn("shrink-0", className)}
       aria-hidden="true"
     >
-      <rect width="64" height="64" rx="16" className="fill-surface-3" />
+      <rect width="64" height="64" rx="14" className="fill-surface-3" />
       <path
-        d="M14 24C14 18.4771 18.4771 14 24 14C29.5228 14 34 18.4771 34 24C34 29.5228 29.5228 34 24 34"
+        d="M10 23C10 15.8203 15.8203 10 23 10C30.1797 10 36 15.8203 36 23C36 30.1797 30.1797 36 23 36"
         stroke="url(#tp_grad_a)"
-        strokeWidth="4"
+        strokeWidth="7"
         strokeLinecap="round"
         style={
           animated
-            ? { strokeDasharray: 36, strokeDashoffset: 36, animation: "draw-in 1s ease-out 0.1s forwards" }
+            ? { strokeDasharray: 62, strokeDashoffset: 62, animation: "draw-in 1s ease-out 0.1s forwards" }
             : undefined
         }
       />
       <path
-        d="M50 40C50 45.5228 45.5228 50 40 50C34.4772 50 30 45.5228 30 40C30 34.4772 34.4772 30 40 30"
+        d="M54 41C54 48.1797 48.1797 54 41 54C33.8203 54 28 48.1797 28 41C28 33.8203 33.8203 28 41 28"
         stroke="url(#tp_grad_b)"
-        strokeWidth="4"
+        strokeWidth="7"
         strokeLinecap="round"
         style={
           animated
-            ? { strokeDasharray: 36, strokeDashoffset: 36, animation: "draw-in 1s ease-out 0.5s forwards" }
+            ? { strokeDasharray: 62, strokeDashoffset: 62, animation: "draw-in 1s ease-out 0.5s forwards" }
             : undefined
         }
       />
       <circle
         cx="32"
         cy="32"
-        r="3.5"
+        r="6"
         className="fill-text-primary"
         style={animated ? { animation: "pulse-glow 2.4s ease-in-out 1.2s infinite" } : undefined}
       />
       <defs>
-        <linearGradient id="tp_grad_a" x1="14" y1="14" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+        <linearGradient id="tp_grad_a" x1="10" y1="10" x2="36" y2="36" gradientUnits="userSpaceOnUse">
           <stop stopColor="#7C8CF8" />
           <stop offset="1" stopColor="#4ADEDE" />
         </linearGradient>
-        <linearGradient id="tp_grad_b" x1="30" y1="30" x2="50" y2="50" gradientUnits="userSpaceOnUse">
+        <linearGradient id="tp_grad_b" x1="28" y1="28" x2="54" y2="54" gradientUnits="userSpaceOnUse">
           <stop stopColor="#4ADEDE" />
           <stop offset="1" stopColor="#7C8CF8" />
         </linearGradient>
