@@ -34,7 +34,11 @@ export type ConnectionEvent =
   | "reset";
 
 const transitions: Record<ConnectionState, Partial<Record<ConnectionEvent, ConnectionState>>> = {
-  idle: { start_search: "searching" },
+  // Mode B (random matching) goes idle -> searching -> matched. Mode A
+  // (manual/room code exchange) has no search phase — the peer is already
+  // known the moment a code is entered — so idle also accepts peer_found
+  // directly.
+  idle: { start_search: "searching", peer_found: "matched" },
   searching: { peer_found: "matched", close: "idle" },
   matched: { begin_connecting: "connecting", close: "idle" },
   connecting: { begin_negotiating: "negotiating", connection_lost: "failed", close: "idle" },

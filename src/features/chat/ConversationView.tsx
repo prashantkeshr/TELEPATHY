@@ -10,6 +10,9 @@ import { Composer } from "@/features/chat/components/Composer";
 import { ReportDialog } from "@/features/chat/components/ReportDialog";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { IconButton } from "@/components/ui/IconButton";
+import { getConnection, removeConnection } from "@/services/webrtc/activeConnections";
+import { parseIntroMessage } from "@/services/webrtc/introMessage";
+import type { ConnectionState } from "@/services/connection/connectionState";
 
 function draftKey(conversationId: string) {
   return `telepathy:draft:${conversationId}`;
@@ -22,6 +25,7 @@ export function ConversationView() {
 
   const conversation = useLiveQuery(async () => (await db.conversations.get(id)) ?? null, [id]);
   const messages = useLiveQuery(() => db.messages.where("conversationId").equals(id).sortBy("createdAt"), [id], []);
+  const profile = useLiveQuery(() => db.profile.get("local"), []);
 
   const [value, setValue] = useState(() => localStorage.getItem(draftKey(id)) ?? "");
   const [replyToId, setReplyToId] = useState<string | null>(null);
@@ -29,10 +33,47 @@ export function ConversationView() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
+  const [liveState, setLiveState] = useState<ConnectionState | null>(null);
 
   useEffect(() => {
     localStorage.setItem(draftKey(id), value);
   }, [id, value]);
+
+  useEffect(() => {
+    const service = getConnection(id);
+    if (!service) {
+      setLiveState(null);
+      return;
+    }
+    setLiveState(service.state);
+    const unsubState = service.onStateChange(setLiveState);
+    const unsubMessage = service.onMessage((text) => {
+      const intro = parseIntroMessage(text);
+      if (intro) {
+        const ownInterests = profile?.interests ?? [];
+        db.conversations.update(id, {
+          peerNickname: intro.displayName,
+          peerAvatarDataUrl: intro.avatarDataUrl,
+          sharedInterests: intro.interests.filter((i) => ownInterests.includes(i)),
+        });
+        return;
+      }
+      db.messages.add({
+        id: crypto.randomUUID(),
+        conversationId: id,
+        sender: "peer",
+        text,
+        reactions: [],
+        createdAt: Date.now(),
+      });
+    });
+    return () => {
+      unsubState();
+      unsubMessage();
+    };
+    // profile is only needed at the moment an intro message actually arrives, not as a re-subscribe trigger
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const replyToMessage = messages?.find((m) => m.id === replyToId);
   const messageById = useMemo(() => new Map((messages ?? []).map((m) => [m.id, m])), [messages]);
@@ -62,6 +103,7 @@ export function ConversationView() {
       reactions: [],
       createdAt: Date.now(),
     });
+    getConnection(id)?.send(text);
     setValue("");
     setReplyToId(null);
     setIsCode(false);
@@ -101,6 +143,7 @@ export function ConversationView() {
   };
 
   const deleteConversation = async () => {
+    removeConnection(id);
     await db.messages.where("conversationId").equals(id).delete();
     await db.conversations.delete(id);
     localStorage.removeItem(draftKey(id));
@@ -109,6 +152,7 @@ export function ConversationView() {
   };
 
   const block = async () => {
+    removeConnection(id);
     await db.blockedUsers.add({
       id: crypto.randomUUID(),
       nickname: conversation.peerNickname,
@@ -138,7 +182,7 @@ export function ConversationView() {
         nickname={conversation.peerNickname}
         avatarDataUrl={conversation.peerAvatarDataUrl}
         sharedInterests={conversation.sharedInterests}
-        connectionState="closed"
+        connectionState={liveState ?? "closed"}
         saved={!!conversation.savedAt}
         onToggleSave={toggleSave}
         onExport={exportConversation}

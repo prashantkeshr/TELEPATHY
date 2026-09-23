@@ -8,6 +8,8 @@ import { ChatsPage } from "@/features/chat/ChatsPage";
 import { ConversationView } from "@/features/chat/ConversationView";
 import { ChatPreviewPage } from "@/features/chat/ChatPreviewPage";
 import { RoomsPage } from "@/features/rooms/RoomsPage";
+import { HostRoomPage } from "@/features/rooms/HostRoomPage";
+import { JoinRoomPage } from "@/features/rooms/JoinRoomPage";
 import { FriendsPage } from "@/features/friends/FriendsPage";
 import { IdeasPage } from "@/features/ideas/IdeasPage";
 import { SettingsPage } from "@/features/settings/SettingsPage";
@@ -26,6 +28,8 @@ export const router = createBrowserRouter([
       { path: "chats/preview", element: <ChatPreviewPage /> },
       { path: "chats/:id", element: <ConversationView /> },
       { path: "rooms", element: <RoomsPage /> },
+      { path: "rooms/host", element: <HostRoomPage /> },
+      { path: "rooms/join", element: <JoinRoomPage /> },
       { path: "friends", element: <FriendsPage /> },
       { path: "ideas", element: <IdeasPage /> },
       { path: "settings", element: <SettingsPage /> },
