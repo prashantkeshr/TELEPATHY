@@ -7,6 +7,13 @@ import Dexie, { type EntityTable } from "dexie";
  * so later phases only add records, not migrations of the shell.
  */
 
+export interface ProfileVisibility {
+  avatar: boolean;
+  interests: boolean;
+  languages: boolean;
+  about: boolean;
+}
+
 export interface ProfileRecord {
   id: "local";
   displayName: string;
@@ -18,6 +25,7 @@ export interface ProfileRecord {
   intents: string[];
   conversationStyle: string[];
   about?: string;
+  visibility: ProfileVisibility;
   createdAt: number;
   updatedAt: number;
 }

@@ -1,6 +1,14 @@
 import { cn } from "@/utils/cn";
 
-export function Logo({ size = 28, className }: { size?: number; className?: string }) {
+export function Logo({
+  size = 28,
+  className,
+  animated = false,
+}: {
+  size?: number;
+  className?: string;
+  animated?: boolean;
+}) {
   return (
     <svg
       width={size}
@@ -17,14 +25,30 @@ export function Logo({ size = 28, className }: { size?: number; className?: stri
         stroke="url(#tp_grad_a)"
         strokeWidth="4"
         strokeLinecap="round"
+        style={
+          animated
+            ? { strokeDasharray: 36, strokeDashoffset: 36, animation: "draw-in 1s ease-out 0.1s forwards" }
+            : undefined
+        }
       />
       <path
         d="M50 40C50 45.5228 45.5228 50 40 50C34.4772 50 30 45.5228 30 40C30 34.4772 34.4772 30 40 30"
         stroke="url(#tp_grad_b)"
         strokeWidth="4"
         strokeLinecap="round"
+        style={
+          animated
+            ? { strokeDasharray: 36, strokeDashoffset: 36, animation: "draw-in 1s ease-out 0.5s forwards" }
+            : undefined
+        }
       />
-      <circle cx="32" cy="32" r="3.5" className="fill-text-primary" />
+      <circle
+        cx="32"
+        cy="32"
+        r="3.5"
+        className="fill-text-primary"
+        style={animated ? { animation: "pulse-glow 2.4s ease-in-out 1.2s infinite" } : undefined}
+      />
       <defs>
         <linearGradient id="tp_grad_a" x1="14" y1="14" x2="34" y2="34" gradientUnits="userSpaceOnUse">
           <stop stopColor="#7C8CF8" />

@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "@/services/storage/db";
 import { Sidebar } from "@/layouts/Sidebar";
 import { MobileTopBar, BottomNav } from "@/layouts/MobileChrome";
 import { CommandPalette } from "@/components/ui/CommandPalette";
 
 export function AppShell() {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const profileCheck = useLiveQuery(
+    async () => ({ resolved: true, exists: (await db.profile.get("local")) !== undefined }),
+    [],
+    { resolved: false, exists: false },
+  );
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -18,6 +25,9 @@ export function AppShell() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, []);
+
+  if (!profileCheck.resolved) return null;
+  if (!profileCheck.exists) return <Navigate to="/onboarding" replace />;
 
   return (
     <div className="flex h-dvh min-h-dvh overflow-hidden bg-bg text-text-primary">

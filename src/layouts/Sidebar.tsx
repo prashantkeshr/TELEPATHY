@@ -1,11 +1,15 @@
 import { NavLink } from "react-router-dom";
+import { useLiveQuery } from "dexie-react-hooks";
 import { Search, Shuffle } from "lucide-react";
+import { db } from "@/services/storage/db";
 import { LogoMark } from "@/components/ui/Logo";
 import { Avatar } from "@/components/ui/Avatar";
 import { primaryNavItems, settingsNavItem } from "@/layouts/nav-items";
 import { cn } from "@/utils/cn";
 
 export function Sidebar({ onOpenCommandPalette }: { onOpenCommandPalette: () => void }) {
+  const profile = useLiveQuery(() => db.profile.get("local"), []);
+
   return (
     <aside className="hidden lg:flex w-64 shrink-0 flex-col border-r border-border bg-bg-elevated">
       <div className="px-4 py-5">
@@ -69,13 +73,24 @@ export function Sidebar({ onOpenCommandPalette }: { onOpenCommandPalette: () => 
           <settingsNavItem.icon className="size-4" />
           Settings
         </NavLink>
-        <div className="flex items-center gap-2.5 rounded-[var(--radius-md)] px-3 py-2">
-          <Avatar name="You" size="sm" />
+        <NavLink
+          to="/onboarding"
+          className="flex items-center gap-2.5 rounded-[var(--radius-md)] px-3 py-2 hover:bg-surface-2 transition-colors"
+        >
+          <Avatar
+            name={profile?.displayName || "You"}
+            src={profile?.visibility.avatar ? profile.avatarDataUrl : undefined}
+            size="sm"
+          />
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-text-primary">Your profile</p>
-            <p className="truncate text-xs text-text-tertiary">Local only</p>
+            <p className="truncate text-sm font-medium text-text-primary">
+              {profile?.displayName || "Your profile"}
+            </p>
+            <p className="truncate text-xs text-text-tertiary">
+              {profile ? "Edit profile" : "Local only"}
+            </p>
           </div>
-        </div>
+        </NavLink>
       </div>
     </aside>
   );

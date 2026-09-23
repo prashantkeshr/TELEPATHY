@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppShell } from "@/layouts/AppShell";
+import { OnboardingPage } from "@/features/profile/onboarding/OnboardingPage";
 import { HomePage } from "@/features/home/HomePage";
 import { DiscoverPage } from "@/features/discovery/DiscoverPage";
 import { RandomMatchPage } from "@/features/discovery/RandomMatchPage";
@@ -11,6 +12,7 @@ import { SettingsPage } from "@/features/settings/SettingsPage";
 import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 
 export const router = createBrowserRouter([
+  { path: "/onboarding", element: <OnboardingPage /> },
   {
     path: "/",
     element: <AppShell />,

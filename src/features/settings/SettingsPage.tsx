@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLiveQuery } from "dexie-react-hooks";
 import {
-  User,
+  Pencil,
   Palette,
   MessageSquare,
   Shield,
@@ -23,6 +25,7 @@ import { useTheme, type ThemePreference } from "@/services/theme/ThemeProvider";
 import { useToast } from "@/components/ui/Toast";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
+import { Avatar } from "@/components/ui/Avatar";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
@@ -34,7 +37,6 @@ interface SettingsGroup {
 }
 
 const groups: SettingsGroup[] = [
-  { icon: User, title: "Account / Profile", ready: false },
   { icon: MessageSquare, title: "Conversation", ready: false },
   { icon: Shield, title: "Privacy", ready: false },
   { icon: Video, title: "Media", ready: false },
@@ -54,6 +56,8 @@ function formatBytes(bytes: number) {
 }
 
 export function SettingsPage() {
+  const navigate = useNavigate();
+  const profile = useLiveQuery(() => db.profile.get("local"), []);
   const { preference, setPreference } = useTheme();
   const { show } = useToast();
   const [usage, setUsage] = useState<{ usage: number; quota: number } | null>(null);
@@ -87,6 +91,25 @@ export function SettingsPage() {
     <div>
       <PageHeader title="Settings" description="Preferences are stored locally on this device." />
       <div className="mx-auto max-w-2xl space-y-6 px-5 py-6 sm:px-8">
+        <Card className="flex items-center gap-3 p-4">
+          <Avatar
+            name={profile?.displayName || "You"}
+            src={profile?.visibility.avatar ? profile.avatarDataUrl : undefined}
+            size="lg"
+          />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-text-primary">
+              {profile?.displayName || "No profile yet"}
+            </p>
+            <p className="truncate text-[13px] text-text-secondary">
+              {profile ? `${profile.interests.length} interests · stored on this device` : "Create your profile to get started"}
+            </p>
+          </div>
+          <Button size="sm" variant="outline" iconLeft={<Pencil />} onClick={() => navigate("/onboarding")}>
+            Edit
+          </Button>
+        </Card>
+
         <Card className="p-4">
           <div className="mb-3 flex items-center gap-2">
             <Palette className="size-4 text-text-tertiary" />
