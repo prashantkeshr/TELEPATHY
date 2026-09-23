@@ -1,0 +1,36 @@
+# Telepathy — robots.txt
+# https://telepathy.dhurta.com
+
+User-agent: *
+Allow: /
+
+# Known AI/answer-engine crawlers — explicitly allowed so Telepathy can be
+# cited in AI-generated answers and summaries.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://telepathy.dhurta.com/sitemap.xml

@@ -1,0 +1,54 @@
+{
+  "name": "telepathy",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "A privacy-first, peer-to-peer platform for meeting new people through random chat, interest matching, language exchange, and knowledge exchange — by text, voice, or video.",
+  "keywords": [
+    "stranger-chat",
+    "random-chat",
+    "video-chat",
+    "webrtc",
+    "peer-to-peer",
+    "p2p",
+    "language-exchange",
+    "meet-new-people",
+    "pwa",
+    "react",
+    "vite",
+    "typescript"
+  ],
+  "homepage": "https://telepathy.dhurta.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prashantkeshr/TELEPATHY.git"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "dexie": "^4.4.6",
+    "dexie-react-hooks": "^4.4.0",
+    "lucide-react": "^1.47.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.13.6",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}

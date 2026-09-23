@@ -1,0 +1,14 @@
+{
+  "name": "Telepathy",
+  "short_name": "Telepathy",
+  "description": "Meet someone new. Find something in common. Start a meaningful conversation.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0c10",
+  "theme_color": "#0b0c10",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

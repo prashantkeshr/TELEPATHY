@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0B0C10"/>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="0%" r="75%">
+      <stop offset="0%" stop-color="#7C8CF8" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#7C8CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="grad_a" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#7C8CF8"/>
+      <stop offset="1" stop-color="#4ADEDE"/>
+    </linearGradient>
+    <linearGradient id="grad_b" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#4ADEDE"/>
+      <stop offset="1" stop-color="#7C8CF8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <g transform="translate(100,120)">
+    <rect width="88" height="88" rx="22" fill="#191b23" stroke="#262835" stroke-width="1.5"/>
+    <path d="M19 33C19 25.268 25.268 19 33 19C40.732 19 47 25.268 47 33C47 40.732 40.732 47 33 47" stroke="url(#grad_a)" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M69 55C69 62.732 62.732 69 55 69C47.268 69 41 62.732 41 55C41 47.268 47.268 41 55 41" stroke="url(#grad_b)" stroke-width="5.5" stroke-linecap="round"/>
+    <circle cx="44" cy="44" r="4.8" fill="#E7E9EE"/>
+  </g>
+
+  <text x="100" y="288" font-family="Segoe UI, Arial, sans-serif" font-size="72" font-weight="700" fill="#E7E9EE">Telepathy</text>
+  <text x="100" y="345" font-family="Segoe UI, Arial, sans-serif" font-size="30" fill="#A6A9B8">Meet someone new. Find something in common.</text>
+  <text x="100" y="385" font-family="Segoe UI, Arial, sans-serif" font-size="30" fill="#A6A9B8">Start a meaningful conversation.</text>
+
+  <g transform="translate(100,440)">
+    <rect width="233" height="44" rx="22" fill="#7c8cf822"/>
+    <text x="24" y="29" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7C8CF8">Random Conversations</text>
+  </g>
+  <g transform="translate(353,440)">
+    <rect width="180" height="44" rx="22" fill="#4adede22"/>
+    <text x="24" y="29" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#4ADEDE">P2P &amp; Private</text>
+  </g>
+  <g transform="translate(553,440)">
+    <rect width="203" height="44" rx="22" fill="#7c8cf822"/>
+    <text x="24" y="29" font-family="Segoe UI, Arial, sans-serif" font-size="18" fill="#7C8CF8">Knowledge Exchange</text>
+  </g>
+</svg>

@@ -1,0 +1,35 @@
+import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
+import { Sidebar } from "@/layouts/Sidebar";
+import { MobileTopBar, BottomNav } from "@/layouts/MobileChrome";
+import { CommandPalette } from "@/components/ui/CommandPalette";
+
+export function AppShell() {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const isMeta = e.metaKey || e.ctrlKey;
+      if (isMeta && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
+
+  return (
+    <div className="flex h-dvh min-h-dvh overflow-hidden bg-bg text-text-primary">
+      <Sidebar onOpenCommandPalette={() => setPaletteOpen(true)} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <MobileTopBar onOpenCommandPalette={() => setPaletteOpen(true)} />
+        <main className="flex-1 overflow-y-auto pb-[calc(64px+env(safe-area-inset-bottom))] lg:pb-0">
+          <Outlet />
+        </main>
+      </div>
+      <BottomNav />
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+    </div>
+  );
+}
